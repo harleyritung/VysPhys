@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" href="https://www.glowscript.org/css/redmond/2.1/jquery-ui.custom.css" rel="stylesheet" />
     <link type="text/css" href="https://www.glowscript.org/css/ide.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://www.glowscript.org/lib/jquery/2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.glowscript.org/lib/jquery/2.1/jquery-ui.custom.min.js"></script>
     <script type="text/javascript" src="https://www.glowscript.org/package/glow.3.2.min.js"></script>
@@ -43,12 +44,12 @@
                     </select>
 
                     <!-- Equation Select -->
-                    <select id="equation" class="form-select" aria-label="Physics Equation to visualize">
-                        <option selected>Select a Physics Equation</option>
+                    <select id="equation-form" class="form-select" aria-label="Physics Equation to visualize">
+                        <option id="equation-default" selected>Select a Physics Equation</option>
                     </select>
+
+                    <div id="coefficient-div"></div>
                 </div>
-
-
 
                 <!-- DRAWING CANVAS -->
                 <div id="glowscript" class="glowscript col-7"></div>
@@ -60,5 +61,105 @@
     </div>
 
     <script src="sphere.js"></script>
+    <script type="text/javascript">
+        const kinematicsEqns = ['1D Motion', '2D Motion'];
+        const dynamicsEqns = [''];
+        const circularEqns = ['Centripedal Force', 'Velocity'];
+        const energyEqns = [''];
+        const momentumEqns = [''];
+        const harmonicsEqns = [''];
+        const torqueEqns = [''];
+
+        // Update Equations dropdown based on Topic input
+        let selectedTopic = [];
+        $("#topic").change(function() {
+            $(".equation").remove();
+            switch (this.value) {
+                case "1":
+                    selectedTopic = kinematicsEqns;
+                    kinematicsEqns.forEach(function (eqn) {
+                        $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+                    });
+                    break;
+                case "2":
+                    selectedTopic = dynamicsEqns;
+                    break;
+                case "3":
+                    selectedTopic = circularEqns;
+                    selectedTopic.forEach(function (eqn) {
+                        $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+                    });
+                    break;
+                case "4":
+                    selectedTopic = energyEqns;
+                    break;
+                case "5":
+                    selectedTopic = momentumEqns;
+                    break;
+                case "6":
+                    selectedTopic = harmonicsEqns;
+                    break;
+                case "7":
+                    selectedTopic = torqueEqns;
+                    break;
+                default:
+                    selectedTopic = [];
+                    break;
+            }
+        });
+
+        // Update Coefficients based on Equation output
+        $("#equation-form").change(function() {
+            console.log(this.value);
+            // remove all preexisting coefficients
+            $(".coefficient").remove();
+            // add new
+            switch (this.value) {
+                // kinematics eqns
+                case "1D Motion":
+                    $("#coefficient-div").append('<p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>at<sup>2</sup> + v<sub>0</sub>t + x<sub>0</sub></p>');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Acceleration (a):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    break;
+                case "2D Motion":
+                    $("#coefficient-div").append('<p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>cos(&Theta;)at<sup>2</sup> + cos(&Theta;)v<sub>0</sub>t + x<sub>0</sub></p>');
+                    $("#coefficient-div").append('<p class="coefficient">y(t) = <sup>1</sup>&frasl;<sub>2</sub>sin(&Theta;)at<sup>2</sup> + sin(&Theta;)v<sub>0</sub>t + y<sub>0</sub></p>');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Acceleration (a):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label">Launch Angle (&Theta;):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    break;
+                case "Centripedal Force":
+                    $("#coefficient-div").append('<p class="coefficient">F<sub>c</sub> = ma<sub>c</sub> = (mv<sup>2</sup>)/r</p>');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Mass (m):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Velocity (v):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Radius (r):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">')
+                    break;
+                case "Velocity":
+                    $("#coefficient-div").append('<p class="coefficient">v = (2&pi;r)/T = <span style="white-space: nowrap; font-size:larger">&radic;<span style="text-decoration:overline;">&nbsp;(Gm)/r&nbsp;</span></span>');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Radius (r):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Period (T):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Mass (m):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+
+                    break;
+                default:
+                    break;
+            }
+        });
+    </script>
 </body>
 </html>
