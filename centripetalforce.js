@@ -30,8 +30,9 @@ var spinner = cylinder({color:color.purple, pos:vec(300, 200, 0), axis:vec(0, 0,
 spinner.radius = rad["*"](10);
 spinner.length = 5;
 
-var forcearrow = cylinder({color:color.white, pos:vec(300, 200, 5), radius:3, axis:vec(0,1, 0)});
-forcearrow.length = 2["*"](mass["*"](acc))["/"](rad);
+var arrowlen = 2["*"](mass["*"](acc))["/"](rad);
+var forcearrow = arrow({color:color.white, pos:vec(300, 200["-"](arrowlen), 5), shaftwidth:3, headwitdth:5, axis:vec(0,1, 0)});
+forcearrow.length = arrowlen;
 
 //caption creation
 scene.append_to_caption('time:  ');
@@ -52,7 +53,7 @@ async function f(obj, arrowval) {
         if (running){
             t = clock()["-"](tinitial);
             obj.rotate({angle:av["*"](dt), axis:vec(0,0,1)});
-            forcearrow.rotate({angle:av["*"](dt), axis:vec(0,0,1), center:vec(300 ,200, 5)})
+            forcearrow.rotate({angle:av["*"](dt), axis:vec(0,0,1), origin:vec(300 ,200, 5)})
             setlabels(t)
             }
         }
