@@ -54,7 +54,7 @@
             var label_ind = forces[i][2];
             //creates arrow shape
             var arrow2 = arrow({color:color.green, shaftwidth:5, headwidth:7.5});
-            arrow2.pos = object.pos["-"](vec(0,0,0));
+            arrow2.pos = object.pos;
             arrow2.length = (50["*"](Find));
             arrow2.rotate({angle:Theta_ind, axis:vec(0,0,1), origin:object.pos});
             print(arrow2.pos)
@@ -69,7 +69,7 @@
         var fnet = fnetx["**"](2)["+"](fnety["**"](2))["**"](0.5);
         var fnetangle = atan(fnety["/"](fnetx));
         var arrowt = arrow({color:color.red, shaftwidth:5, headwidth:7.5});
-        arrowt.pos = object.pos["-"](vec(0, 0, 0));
+        arrowt.pos = object.pos;
         arrowt.length = (50["*"](fnet));
         print(arrowt.length)
         arrowt.rotate({angle:fnetangle, axis:vec(0,0,1), origin:object.pos});
@@ -78,7 +78,7 @@
         
         
         //background variables
-        var accvec = vec(fnetx["/"](mass), fnety["/"](mass), 0);
+        var accvec = 1["-u"]()["*"](vec(fnetx["/"](mass), fnety["/"](mass), 0));
         var t_tot = 20;
         var v0 = 0;
         var xinit = 0;
@@ -94,11 +94,16 @@
         var fnetlab = wtext({text:'{:1.2f}'.format(fnet)})
         scene.append_to_caption('\n Theta:  ')
         var anglelab = wtext({text:'{:1.2f}'.format(fnetangle)})
+        scene.append_to_caption('x:  ')
+        var xloc = wtext({text:'{:1.2f}'.format(0)})
+        scene.append_to_caption('y:  ')
+        var yloc = wtext({text:'{:1.2f}'.format(0)})
+        
         
         function setlabels(t, obj) {
            timetext.text = '{:1.2f}'.format(t)
-           //xloc.text = '{:1.2f}'.format(obj.pos.x)
-           //yloc.text = '{:1.2f}'.format(obj.pos.y)
+           xloc.text = '{:1.2f}'.format(obj.pos.x)
+           yloc.text = '{:1.2f}'.format(obj.pos.y)
         }
         
         object.pos = startval;
@@ -116,7 +121,7 @@
                     if(t[">"](t_tot)) break;
                     //if object comes into contact with floor break
                     if(floor_flag)
-                        if(obj.pos.y["-"](55)[">="](floor.pos.y)) break;
+                        if(obj.pos.y["<="](floor.pos.y)) break;
         
                     obj.pos = accvec["*"](t["**"](2))["+"](v0vec["*"](t))["+"](startval);
                     for (i=0; i["<"](thelist.length); i++) {
@@ -128,7 +133,7 @@
                         dt = t["-"](clockprev);
                         if (forcearrow) {
                             //update the positions of the arrows based on the position of the object
-                            forcearrow.pos = obj.pos["+"](vec(50,0,0));
+                            forcearrow.pos = obj.pos;
                             Theta_ind = forces[i][1];
                             Find = forces[i][0];
                             label_ind = forces[i][2];
@@ -137,18 +142,18 @@
                         }
                     }
                     
-                    //if (600 <= obj.pos.x) {
-                    //    tinitial = clock();
-                    //}
-                    //if (obj.pos.x <= 0) {
-                    //    tinitial = clock();
-                    //}
-                    //if (obj.pos.y >= 400) {
-                    //    tinitial = clock();
-                    //}
-                    //if (obj.pos.y <=0) {
-                    //    tinitial = clock();
-                    //}
+                    if (600["<="](obj.pos.x)) {
+                        tinitial = clock();
+                    }
+                    if (obj.pos.x["<="](0)) {
+                        tinitial = clock();
+                    }
+                    if (obj.pos.y[">="](400)) {
+                        tinitial = clock();
+                    }
+                    if (obj.pos.y["<="](0)) {
+                        tinitial = clock();
+                    }
                     clockprev = t;
                     setlabels(t, obj);       
                 }
@@ -159,5 +164,3 @@
     }
     ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
     // END JAVASCRIPT
-    
-    //--><!]]></script>
