@@ -30,9 +30,8 @@ floor.size = vec(600, 10, 50);
 floor.pos = vec(300, 0, 0)
 
 //user defined variables 
-var acc = 10["-u"]();
 var dir = 0;
-var accvec = vec(acc["*"](cos(dir)), acc["*"](sin(dir)), 0);
+var accvec = vec(0, -9.8, 0);
 var t_tot = 20;
 var v0 = 80;
 var xinit = 20;
