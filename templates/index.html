@@ -44,11 +44,14 @@
                     </select>
 
                     <!-- Equation Select -->
-                    <select id="equation-form" class="form-select" aria-label="Physics Equation to visualize">
+                    <form method="post">
+                    <select name="equation" id="equation-form" class="form-select" aria-label="Physics Equation to visualize">
                         <option id="equation-default" selected>Select a Physics Equation</option>
                     </select>
 
-                    <div id="coefficient-div"></div>
+                    <!-- Inputs -->
+                        <div id="coefficient-div"></div>
+                    </form>
                 </div>
 
                 <!-- DRAWING CANVAS -->
@@ -59,9 +62,10 @@
         <!-- RIGHT BORDER -->
         <div class="col-1"></div>
     </div>
+
+    <script src="{{url_for('static', filename='1dkinematics.js')}}"></script>
     {% block javascript %}
 
-    <script src="{{url_for('static', filename='sphere.js')}}"></script>
     <script type="text/javascript">
         const kinematicsEqns = ['1D Motion', '2D Motion'];
         const dynamicsEqns = ['Sum of Forces'];
@@ -120,11 +124,14 @@
                 case "1D Motion":
                     $("#coefficient-div").append('<p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>at<sup>2</sup> + v<sub>0</sub>t + x<sub>0</sub></p>');
                     $("#coefficient-div").append('<label class="form-label coefficient">Acceleration (a):</label>');
-                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<input id="a" name="acceleration" type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     $("#coefficient-div").append('<label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>');
-                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<input id="v" name="velocity" type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     $("#coefficient-div").append('<label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>');
-                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<input id="x" name="position" type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<button class="btn btn-success">Create Visualization</button>').click(function() {
+                        oneDKinematics($("#a").val(), $("#v").val(), $("#x").val());
+                    });
                     break;
                 case "2D Motion":
                     $("#coefficient-div").append('<p class="coefficient">x(t) = cos(&Theta;)v<sub>0</sub>t + x<sub>0</sub></p>');
@@ -254,7 +261,6 @@
                     $("#coefficient-div").append('<label class="form-label coefficient"># of Forces:</label>');
                     $("#coefficient-div").append('<input type="text" id="force-num" class="form-control coefficient" aria-describedby="basic-addon1">')
                     $($("#coefficient-div").append('<button class="coefficient btn btn-primary">Input Forces</button><p></p>')).click(function() {
-                        console.log($("#force-num").val());
                         // remove all preexisting coefficients
                         $(".force").remove();
                         for (let i = 1; i <= $("#force-num").val(); i++) {
@@ -267,7 +273,7 @@
                     });
                     break;
                 default:
-                    break;
+                    break;                
             }
         });
     </script>

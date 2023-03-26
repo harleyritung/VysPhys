@@ -1,5 +1,5 @@
 // START JAVASCRIPT
-;(function() {;
+;(function () {;
 async function __main__() {
 "use strict";
 var version = ["3.2", "glowscript"];
@@ -12,23 +12,11 @@ scene.autoscale=true
 scene.center = vec(300,100, 10)
 var running = true;
     
-//button({text:"Pause", pos:scene.title_anchor, bind:Run});
-
-//define the object that will be moving
-let object = box({color:color.cyan});
-object.size = vec(10,10,10);
-
 //user defined variables 
-var acc = vec(10, 0, 0);
+var acc = vec({{ }}, 0, 0);
 var t_tot = 20;
-var v0 = vec(1, 0, 0);
-var xval = vec(1, 50, 10);
-
-// other variables
-
-async function plot(obj) {
-    
-}
+var v0 = vec(v, 0, 0);
+var xval = vec(x, 50, 10);
 
 //caption creation
 scene.append_to_caption('time:  ')
@@ -41,9 +29,15 @@ function setlabels(t, obj) {
    xloc.text = '{:1.2f}'.format(obj.pos.x)
 }
 
-object.pos = xval;
 var dt = 0.05;
+
+let object = box({color:color.cyan});
+
 async function f(obj) {
+    //define the object that will be moving
+    object.size = vec(10,10,10);
+    object.pos = xval;
+
     let t = clock();
     var tinitial = clock();
     //todo: make this update
@@ -66,6 +60,7 @@ async function f(obj) {
     }
 }
 let t2 = await f(object);
+
 
 }
 ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
