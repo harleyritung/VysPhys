@@ -1,4 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
+import math
+
+if __name__ == "__main__":
+    app.run(port=8000, debug=True)
 
 app = Flask(__name__)
 
@@ -10,10 +14,7 @@ def index():
         if equation == "1D Motion":
             return redirect(url_for('oneDMotion'))
         elif equation == "2D Motion":
-            print(request.values)
-            print(request.form.get("acceleration"))
-            print(request.form.get("velocity"))
-            print(request.form.get("position"))
+            return redirect(url_for('twoDMotion'))
     return render_template('index.html')
 
 @app.route("/1DMotion", methods=['GET', 'POST'])
@@ -26,3 +27,16 @@ def oneDMotion():
         velocity = request.form.get("velocity")
         position = request.form.get("position")
     return render_template('1dMotion.html', a = acceleration, v = velocity, x = position)
+
+@app.route("/2DMotion", methods=['GET', 'POST'])
+def twoDMotion():
+    angle = math.pi / 2
+    velocity = 80
+    xposition = 20
+    yposition = 10
+    if request.method == 'POST':
+        velocity = request.form.get("velocity")
+        angle = request.form.get("angle")
+        xposition = request.form.get("xposition")
+        yposition = request.form.get("yposition")
+    return render_template('2dMotion.html', angle = angle, v = velocity, x = xposition, y = yposition)
