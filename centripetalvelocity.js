@@ -18,21 +18,23 @@ floor.size = vec(600, 10, 50);
 floor.pos = vec(300, 0, 0)
 
 //set the variables and create cylinder object
-var mass = 20; 
 var acc = 10;
 var rad = 5;
-var v = acc["*"](rad)["**"](0.5)
+var T = 10;
+var v = 2["*"](pi)["*"](rad)["/"](T);
 
 //the angular velocity used for the rotatio
-var av = acc["/"](rad)["**"](0.5)
+var av = v["/"](rad);
 
 var spinner = cylinder({color:color.purple, pos:vec(300, 200, 0), axis:vec(0, 0, 1), radius:rad});
 spinner.radius = rad["*"](10);
 spinner.length = 5;
 
-var arrowlen = 2["*"](mass["*"](acc))["/"](rad);
-var forcearrow = arrow({color:color.white, pos:vec(300, 200["-"](arrowlen), 5), shaftwidth:3, headwitdth:5, axis:vec(0,1, 0)});
-forcearrow.length = arrowlen;
+var center = sphere({color:color.white, pos:vec(300,200, 5), radius:3});
+
+var forcearrow = arrow({color:color.white, pos:vec(300, 200["+"](spinner.radius), 5), radius:3, axis:vec(0,1, 0)});
+forcearrow.length = 10["*"](v);
+forcearrow.rotate({angle:pi["/"](2), axis:vec(0,0, 1), origin:vec(300, 200["+"](spinner.radius), 5)});
 
 //caption creation
 scene.append_to_caption('time:  ');
@@ -58,10 +60,10 @@ async function f(obj, arrowval) {
             }
         }
     }
-let t2 = await f(spinner, forcearrow);
-
-
-}
+let t2 = await f(spinner, forcearrow);}
 ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
 // END JAVASCRIPT
+
+
+
 
