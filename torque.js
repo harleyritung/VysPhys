@@ -1,10 +1,4 @@
 // START JAVASCRIPT
-;(function() {;
-async function __main__() {
-"use strict";
-var version = ["3.2", "glowscript"];
-Array.prototype.toString = function() { return __parsearray(this) };
-var scene = canvas();
 
 scene.width = 600
 scene.height = 400
@@ -12,15 +6,12 @@ scene.autoscale=true
 scene.center = vec(300,100, 10)
 var running = true;
 
-//create the floor
-let floor = box({color:color.white});
-floor.size = vec(600, 10, 50);
-floor.pos = vec(300, 0, 0)
 
 //set the variables and create cylinder object
 var rad = 5;
 var forces = [[1, 0, 1], [2, pi["/"](2), 2], [9, pi, 3], [4, pi["/"](4), 4], [5, 3["*"](pi)["/"](2), 5]];
 var Arrows = [];
+var Arrow_Labels = []
 var mass = 1;
 
 //the angular velocity used for the rotatio
@@ -48,7 +39,10 @@ for (var i=0; i["<"](N); i++) {
     arrow2.pos = vec(300["+"](spinner.radius), 200, 5);
     arrow2.length = (50["*"](Find));
     arrow2.rotate({angle:Theta_ind, axis:vec(0,0,1), origin:spinner.pos});
+    let Flabel = label({pos:arrow2.pos , xoffset:arrow2.length["*"](cos(Theta_ind))["/"](2), yoffset:arrow2.length["*"](sin(Theta_ind))["/"](2), text:'F'["+"](i["+"](1)), line:false})
+    Arrow_Labels.push(Flabel);
     //print(arrow2.pos)
+    print("F"["+"](forces[i][2])["+"](": ")["+"](forces[i][0])["+"]("N") )
     Arrows.push( arrow2 );
             
     //update fnet calculations
@@ -73,7 +67,10 @@ var av = acc["/"](rad)["**"](0.5);
 var arrowlen = 50["*"](mass)["*"](acc)["/"](rad);
 var torquearrow = arrow({color:color.white, pos:vec(300, 200, 5), shaftwidth:3, headwitdth:5, axis:vec(0,1, 0)});
 torquearrow.length = 50["*"](rad)["*"](fnet)["*"](sin(fnetangle));
-
+print("Fnet: "["+"](arrowlen)["+"]("N"))
+let Flabel = label({pos:arrowt.pos , xoffset:arrowt.length["*"](cos(fnetangle))["/"](2), yoffset:arrow2.length["*"](sin(fnetangle))["/"](2), text:'Fnet', line:false})            
+let torquelabel = label({pos:torquearrow.pos , xoffset:0, yoffset:-10, text:'Torque', line:false})
+            
 //caption creation
 //caption creation
 scene.append_to_caption('time:  ');
@@ -97,10 +94,9 @@ async function f(obj, arrowval) {
             obj.rotate({angle:av["*"](dt), axis:vec(0,0,1)});
             arrowval.rotate({angle:av["*"](dt), axis:vec(0,0,1)});
             setlabels(t);
+            //torquelabel.pos = torquearrow.pos;
             }
         }
     }
-let t2 = await f(spinner, torquearrow);}
-;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
-$("#glowscript").removeAttr("id") }; __main__() })})()
+let t2 = await f(spinner, torquearrow);
 // END JAVASCRIPT
