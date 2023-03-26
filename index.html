@@ -65,7 +65,7 @@
         const kinematicsEqns = ['1D Motion', '2D Motion'];
         const dynamicsEqns = [''];
         const circularEqns = ['Centripedal Force', 'Velocity'];
-        const energyEqns = [''];
+        const energyEqns = ['Kinetic/Potential Energy', 'Work'];
         const momentumEqns = [''];
         const harmonicsEqns = [''];
         const torqueEqns = [''];
@@ -77,18 +77,12 @@
             switch (this.value) {
                 case "1":
                     selectedTopic = kinematicsEqns;
-                    kinematicsEqns.forEach(function (eqn) {
-                        $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
-                    });
                     break;
                 case "2":
                     selectedTopic = dynamicsEqns;
                     break;
                 case "3":
                     selectedTopic = circularEqns;
-                    selectedTopic.forEach(function (eqn) {
-                        $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
-                    });
                     break;
                 case "4":
                     selectedTopic = energyEqns;
@@ -106,6 +100,10 @@
                     selectedTopic = [];
                     break;
             }
+
+            selectedTopic.forEach(function (eqn) {
+                $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+            });
         });
 
         // Update Coefficients based on Equation output
@@ -154,7 +152,25 @@
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     $("#coefficient-div").append('<label class="form-label coefficient">Mass (m):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
-
+                    break;
+                case "Kinetic/Potential Energy":
+                    $("#coefficient-div").append('<p class="coefficient">KE = <sup>1</sup>&frasl;<sub>2</sub>mv<sup>2</sup>');
+                    $("#coefficient-div").append('<p class="coefficient">PE = mgh');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Mass (m):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Velocity (v):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Height (h):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    break;
+                case "Work":
+                    $("#coefficient-div").append('<p class="coefficient">Work = Fdcos(&Theta;)');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Force (F):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Displacement (d):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Angle Between Force and Displacement (&Theta;):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     break;
                 default:
                     break;
