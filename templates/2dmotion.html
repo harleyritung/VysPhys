@@ -298,6 +298,7 @@
     scene.height = 400
     scene.autoscale=true
     scene.center = vec(300,100, 10)
+    scene.userzoom = false
     var running = true;
 
     function Run(b) {
@@ -317,9 +318,8 @@
     floor.pos = vec(300, 0, 0)
 
     //user defined variables 
-    var acc = 10["-u"]();
     var dir = parseInt($("#angle").val());
-    var accvec = vec(acc["*"](cos(dir)), acc["*"](sin(dir)), 0);
+    var accvec = vec(0, -9.8, 0);
     var t_tot = 20;
     var v0 = parseInt($("#v").val());
     var xinit = parseInt($("#x").val());
@@ -349,7 +349,7 @@
     async function f(obj) {
         let t = clock();
         var tinitial = clock();
-        
+        scene.autoscale = false;
         while (true) {
             await rate(100);
             
@@ -369,6 +369,9 @@
                 if (obj.pos.y["<="](0)) {
                     tinitial = clock();
                 }
+                // if (obj.pos.x - 50 >= startval.x && obj.pos.y-15["<="](floor.pos.y)) {
+                //     tinitial = clock();
+                // }
 
                 obj.pos = accvec["*"](t["**"](2))["+"](v0vec["*"](t))["+"](startval);
                 setlabels(t, obj)
