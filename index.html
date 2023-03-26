@@ -66,7 +66,7 @@
         const dynamicsEqns = [''];
         const circularEqns = ['Centripedal Force', 'Velocity'];
         const energyEqns = ['Kinetic/Potential Energy', 'Work'];
-        const momentumEqns = [''];
+        const momentumEqns = ['Momentum', 'Impulse'];
         const harmonicsEqns = [''];
         const torqueEqns = [''];
 
@@ -124,15 +124,15 @@
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     break;
                 case "2D Motion":
-                    $("#coefficient-div").append('<p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>cos(&Theta;)at<sup>2</sup> + cos(&Theta;)v<sub>0</sub>t + x<sub>0</sub></p>');
-                    $("#coefficient-div").append('<p class="coefficient">y(t) = <sup>1</sup>&frasl;<sub>2</sub>sin(&Theta;)at<sup>2</sup> + sin(&Theta;)v<sub>0</sub>t + y<sub>0</sub></p>');
+                    $("#coefficient-div").append('<p class="coefficient">x(t) = cos(&Theta;)v<sub>0</sub>t + x<sub>0</sub></p>');
+                    $("#coefficient-div").append('<p class="coefficient">y(t) = <sup>1</sup>&frasl;<sub>2</sub>gt<sup>2</sup> + sin(&Theta;)v<sub>0</sub>t + y<sub>0</sub></p>');
                     $("#coefficient-div").append('<label class="form-label coefficient">Acceleration (a):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     $("#coefficient-div").append('<label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     $("#coefficient-div").append('<label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
-                    $("#coefficient-div").append('<label class="form-label">Launch Angle (&Theta;):</label>');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Launch Angle (&Theta;):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     break;
                 case "Centripedal Force":
@@ -170,6 +170,20 @@
                     $("#coefficient-div").append('<label class="form-label coefficient">Displacement (d):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     $("#coefficient-div").append('<label class="form-label coefficient">Angle Between Force and Displacement (&Theta;):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    break;
+                case "Momentum":
+                    $("#coefficient-div").append('<p class="coefficient">p = mv');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Mass (m):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Velocity (v):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    break;
+                case "Impulse":
+                    $("#coefficient-div").append('<p class="coefficient">&Delta;p = Ft');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Force (F):</label>');
+                    $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
+                    $("#coefficient-div").append('<label class="form-label coefficient">Time (t):</label>');
                     $("#coefficient-div").append('<input type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
                     break;
                 default:
