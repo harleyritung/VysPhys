@@ -30,13 +30,10 @@
             <div class="row">
 
                 <!-- INPUTS -->
-                <input id="hidden-eqn" type="hidden" value="{{ equation }}">
-
                 <div class="col-5">
                     <!-- Topic Select -->
                     <select id="topic" class="form-select" aria-label="Physics Topic to visualize">
-                        <option selected>Select a Physics Unit</option>
-                        <option value="1">Kinematics</option>
+                        <option selected value="1">Kinematics</option>
                         <option value="2">Dynamics</option>
                         <option value="3">Circular Motion/Gravitation</option>
                         <option value="4">Energy</option>
@@ -49,10 +46,20 @@
                     <form id="equation" method="post">
                     <select name="equation" id="equation-form" class="form-select" aria-label="Physics Equation to visualize">
                         <option id="equation-default" selected>Select a Physics Equation</option>
+                        
                     </select>
 
                     <!-- Inputs -->
-                        <div id="coefficient-div"></div>
+                        <div id="coefficient-div">
+                            <p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>at<sup>2</sup> + v<sub>0</sub>t + x<sub>0</sub></p>
+                            <label class="form-label coefficient">Acceleration (a):</label>
+                            <input id="a" name="acceleration" value="{{ a }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
+                            <label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>
+                            <input id="v" name="velocity" value="{{ v }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
+                            <label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>
+                            <input id="x" name="position" value="{{ x }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
+                            <button class="btn btn-success">Create Visualization</button>
+                        </div>
                     </form>
                 </div>
 
@@ -65,8 +72,9 @@
         <div class="col-1"></div>
     </div>
 
-    <script type="text/javascript" src="{{url_for('static', filename='sphere.js')}}"></script>
+
     {% block javascript %}
+
     <script type="text/javascript">
         const kinematicsEqns = ['1D Motion', '2D Motion'];
         const dynamicsEqns = ['Sum of Forces'];
@@ -78,9 +86,22 @@
 
         // Update Equations dropdown based on Topic input
         let selectedTopic = [];
+        $("#topic").ready(function() {
+            kinematicsEqns.forEach(function (eqn) {
+                if (eqn == "1D Motion") {
+                    $("#equation-form").append("<option selected class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+
+                }
+                else {
+                    $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+                }
+            });
+        });
+
         $("#topic").change(function() {
             $(".equation").remove();
             $(".coefficient").remove();
+            console.log(this.value)
             switch (this.value) {
                 case "1":
                     selectedTopic = kinematicsEqns;
@@ -109,13 +130,18 @@
             }
 
             selectedTopic.forEach(function (eqn) {
-                $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+                if (eqn == "1D Motion") {
+                    $("#equation-form").append("<option selected class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+
+                }
+                else {
+                    $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
+                }
             });
         });
 
         // Update Coefficients based on Equation output
         $("#equation-form").change(function() {
-            $("#equation").submit();
             var eqn = this.value;
             // remove all preexisting popup forms
             $(".force").remove();
@@ -124,16 +150,7 @@
             switch (eqn) {
                 // kinematics eqns
                 case "1D Motion":
-                    $("#coefficient-div").append('<p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>at<sup>2</sup> + v<sub>0</sub>t + x<sub>0</sub></p>');
-                    $("#coefficient-div").append('<label class="form-label coefficient">Acceleration (a):</label>');
-                    $("#coefficient-div").append('<input id="a" name="acceleration" value="{{ a }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
-                    $("#coefficient-div").append('<label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>');
-                    $("#coefficient-div").append('<input id="v" name="velocity" value="{{ v }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
-                    $("#coefficient-div").append('<label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>');
-                    $("#coefficient-div").append('<input id="x" name="position" value="{{ x }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">');
-                    $("#coefficient-div").append('<button class="btn btn-success">Create Visualization</button>').click(function() {
-                        oneDKinematics();
-                    });
+
                     break;
                 case "2D Motion":
                     $("#coefficient-div").append('<p class="coefficient">x(t) = cos(&Theta;)v<sub>0</sub>t + x<sub>0</sub></p>');
@@ -154,11 +171,9 @@
                     $("#coefficient-div").append('<label class="form-label coefficient"># of Forces:</label>');
                     $("#coefficient-div").append('<input type="text" id="force-num" class="form-control coefficient" aria-describedby="basic-addon1">')
                     $($("#coefficient-div").append('<button class="coefficient btn btn-primary">Input Forces</button><p></p>')).click(function() {
-                        console.log($("#force-num").val());
                         // remove all preexisting coefficients
                         // $(".force").remove();
                         for (let i = 1; i <= $("#force-num").val(); i++) {
-                            console.log(i);
                             $("#coefficient-div").append('<label class="form-label force">Force ' + i + ':</label>');
                             $("#coefficient-div").append('<input id="force-' + i + ' type="text" class="form-control force" aria-describedby="basic-addon1">');
                             $("#coefficient-div").append('<label class="form-label force">Angle ' + i + ':</label>');
@@ -266,7 +281,6 @@
                         // remove all preexisting coefficients
                         $(".force").remove();
                         for (let i = 1; i <= $("#force-num").val(); i++) {
-                            console.log(i);
                             $("#coefficient-div").append('<label class="form-label force">Force ' + i + ':</label>');
                             $("#coefficient-div").append('<input id="force-' + i + ' type="text" class="form-control force" aria-describedby="basic-addon1">');
                             $("#coefficient-div").append('<label class="form-label force">Angle ' + i + ':</label>');
@@ -278,6 +292,145 @@
                     break;                
             }
         });
+
+    // 1D Kinematics
+    // START JAVASCRIPT
+    // ;(function () {;
+    // async function __main__() {
+    // "use strict";
+    // var version = ["3.2", "glowscript"];
+    // Array.prototype.toString = function() { return __parsearray(this) };
+    // var scene = canvas();
+
+    // scene.width = 600
+    // scene.height = 200
+    // scene.autoscale=true
+    // scene.center = vec(300,100, 10)
+    // var running = true;
+        
+    // var acc = vec($("#a").val(), 0, 0);
+    // console.log("val " + $("#a").val())
+    // var t_tot = 20;
+    // var v0 = vec($("#v").val(), 0, 0);
+    // var xval = vec($("#x").val(), 50, 10);
+
+    // //caption creation
+    // scene.append_to_caption('time:  ')
+    // var timetext = wtext({text:'{:1.2f}'.format(0)})
+    // scene.append_to_caption('\n x value:  ')
+    // var xloc = wtext({text:'{:1.2f}'.format(xval.x)})
+
+    // function setlabels(t, obj) {
+    // timetext.text = '{:1.2f}'.format(t)
+    // xloc.text = '{:1.2f}'.format(obj.pos.x)
+    // }
+
+    // var dt = 0.05;
+
+    // let object = box({color:color.cyan});
+
+    // async function f(obj) {
+    //     //define the object that will be moving
+    //     object.size = vec(10,10,10);
+    //     object.pos = xval;
+
+    //     let t = clock();
+    //     var tinitial = clock();
+    //     //todo: make this update
+        
+    //     while (true) {
+    //         await rate(100);
+            
+    //         if (running){
+    //             //set time
+    //             t = clock()["-"](tinitial);
+    //             if(t[">"](t_tot)) break;
+    //             if ((570["<="](object.pos.x)) && (object.pos.x["<="](600))) {
+    //                 tinitial = clock();
+    //             }
+    //             obj.pos = acc["*"](t["**"](2))["+"](v0["*"](t))["+"](xval);
+    //             setlabels(t, obj)
+                
+            
+    //         }
+    //     }
+    // }
+    // let t2 = await f(object);
+    // }
+    // ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
+    // END JAVASCRIPT
+    
+    // START JAVASCRIPT
+    ;(function() {;
+    async function __main__() {
+    "use strict";
+    var version = ["3.2", "glowscript"];
+    Array.prototype.toString = function() { return __parsearray(this) };
+    var scene = canvas();
+
+
+    scene.width = 600
+    scene.height = 200
+    scene.autoscale=true
+    scene.center = vec(300,100, 10)
+    var running = true;
+        
+    //button({text:"Pause", pos:scene.title_anchor, bind:Run});
+
+    //user defined variables 
+    var acc = vec(parseInt($("#a").val()), 0, 0);
+    var t_tot = 20;
+    var v0 = vec(parseInt($("#v").val()), 0, 0);
+    var xval = vec(parseInt($("#x").val()), 50, 10);
+
+
+    // other variables
+
+    async function plot(obj) {
+        
+    }
+
+    //caption creation
+    scene.append_to_caption('time:  ')
+    var timetext = wtext({text:'{:1.2f}'.format(0)})
+    scene.append_to_caption('\n x value:  ')
+    var xloc = wtext({text:'{:1.2f}'.format(xval.x)})
+
+    function setlabels(t, obj) {
+    timetext.text = '{:1.2f}'.format(t)
+    xloc.text = '{:1.2f}'.format(obj.pos.x)
+    }
+    let object = box({color:color.cyan});
+    var dt = 0.05;
+    async function f(obj) {
+        //define the object that will be moving
+
+        object.size = vec(10,10,10);
+        object.pos = xval;
+
+        let t = clock();
+        var tinitial = clock();
+        //todo: make this update
+        
+        while (true) {
+            await rate(100);
+            
+            if (running){
+                //set time
+                t = clock()["-"](tinitial);
+                if(t[">"](t_tot)) break;
+                if ((570["<="](object.pos.x)) && (object.pos.x["<="](600))) {
+                    tinitial = clock();
+                }
+                obj.pos = acc["*"](t["**"](2))["+"](v0["*"](t))["+"](xval);
+                setlabels(t, obj)
+                
+            
+            }
+        }
+    }
+    let t2 = await f(object);}
+    ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
 
     </script>
     {% endblock %}
