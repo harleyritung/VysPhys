@@ -17,6 +17,8 @@ def index():
             return redirect(url_for('twoDMotion'))
         elif equation == "Centripetal Force":
             return redirect(url_for('centripetalForce'))
+        elif equation == "Velocity":
+            return redirect(url_for('centripetalVelocity'))
     return render_template('index.html')
 
 @app.route("/1DMotion", methods=['GET', 'POST'])
@@ -28,12 +30,10 @@ def oneDMotion():
         equation = request.form.get('equation')
         if equation == "2D Motion":
             return redirect(url_for('twoDMotion'))
-        elif equation == "Sum of Forces":
-            return redirect(url_for('index'))
         elif equation == "Centripetal Force":
             return redirect(url_for('centripetalForce'))
-        elif equation == "Centripetal Force":
-            return redirect(url_for('centripetalForce'))
+        elif equation == "Velocity":
+            return redirect(url_for('centripetalVelocity'))
     elif request.method == "POST":
         acceleration = request.form.get("acceleration")
         velocity = request.form.get("velocity")
@@ -54,6 +54,8 @@ def twoDMotion():
             return redirect(url_for('twoDMotion'))
         elif equation == "Centripetal Force":
             return redirect(url_for('centripetalForce'))
+        elif equation == "Velocity":
+            return redirect(url_for('centripetalVelocity'))
     elif request.method == "POST":
         velocity = request.form.get("velocity")
         angle = request.form.get("angle")
@@ -72,19 +74,30 @@ def centripetalForce():
             return redirect(url_for('oneDMotion'))
         elif equation == "2D Motion":
             return redirect(url_for('twoDMotion'))
+        elif equation == "Velocity":
+            return redirect(url_for('centripetalVelocity'))
     elif request.method == 'POST':
         radius = request.form.get("radius")
         velocity = request.form.get("velocity")
         mass = request.form.get("mass")
     return render_template('centripetalForce.html', m = mass, v = velocity, r = radius)
 
-@app.route("/centrpetalVelocity", methods=['GET', 'POST'])
+@app.route("/centripetalVelocity", methods=['GET', 'POST'])
 def centripetalVelocity():
-    acceleration = 10
-    velocity = 5
-    position = 1
-    if request.method == 'POST':
+    radius = 5
+    period = 2
+    if request.method == 'POST' and request.form.get("equation") != "Velocity":
+        print("new equation")
+        print(request.values)
+        equation = request.form.get('equation')
+        if equation == "1D Motion":
+            return redirect(url_for('oneDMotion'))
+        elif equation == "2D Motion":
+            return redirect(url_for('twoDMotion'))
+        elif equation == "Centripetal Force":
+            return redirect(url_for('centripetalForce'))
+    elif request.method == 'POST':
+        print("same eqn")
         radius = request.form.get("radius")
         period = request.form.get("period")
-        mass = request.form.get("mass")
-    return render_template('centripetalVelocty.html', r = radius, T = period, m = mass)
+    return render_template('centripetalVelocity.html', r = radius, T = period)

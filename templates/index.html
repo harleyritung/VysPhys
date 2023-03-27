@@ -129,11 +129,7 @@
                     $("#coefficient-div").append('<label class="form-label coefficient"># of Forces:</label>');
                     $("#coefficient-div").append('<input type="text" id="force-num" class="form-control coefficient" aria-describedby="basic-addon1">')
                     $($("#coefficient-div").append('<button class="coefficient btn btn-primary">Input Forces</button><p></p>')).click(function() {
-                        console.log($("#force-num").val());
-                        // remove all preexisting coefficients
-                        // $(".force").remove();
                         for (let i = 1; i <= $("#force-num").val(); i++) {
-                            console.log(i);
                             $("#coefficient-div").append('<label class="form-label force">Force ' + i + ':</label>');
                             $("#coefficient-div").append('<input id="force-' + i + ' type="text" class="form-control force" aria-describedby="basic-addon1">');
                             $("#coefficient-div").append('<label class="form-label force">Angle ' + i + ':</label>');
@@ -232,7 +228,6 @@
                         // remove all preexisting coefficients
                         $(".force").remove();
                         for (let i = 1; i <= $("#force-num").val(); i++) {
-                            console.log(i);
                             $("#coefficient-div").append('<label class="form-label force">Force ' + i + ':</label>');
                             $("#coefficient-div").append('<input id="force-' + i + ' type="text" class="form-control force" aria-describedby="basic-addon1">');
                             $("#coefficient-div").append('<label class="form-label force">Angle ' + i + ':</label>');

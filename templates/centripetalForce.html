@@ -46,7 +46,6 @@
                     <form id="equation" method="post">
                     <select name="equation" id="equation-form" class="form-select" aria-label="Physics Equation to visualize">
                         <option id="equation-default" selected>Select a Physics Equation</option>
-                        
                     </select>
 
                     <!-- Inputs -->
@@ -87,7 +86,7 @@
         // Update Equations dropdown based on Topic input
         let selectedTopic = [];
         $("#topic").ready(function() {
-            kinematicsEqns.forEach(function (eqn) {
+            circularEqns.forEach(function (eqn) {
                 if (eqn == "Centripetal Force") {
                     $("#equation-form").append("<option selected class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
                 }
@@ -100,7 +99,6 @@
         $("#topic").change(function() {
             $(".equation").remove();
             $(".coefficient").remove();
-            console.log(this.value)
             switch (this.value) {
                 case "1":
                     selectedTopic = kinematicsEqns;
