@@ -33,9 +33,9 @@
                 <div class="col-5">
                     <!-- Topic Select -->
                     <select id="topic" class="form-select" aria-label="Physics Topic to visualize">
-                        <option selected value="1">Kinematics</option>
+                        <option value="1">Kinematics</option>
                         <option value="2">Dynamics</option>
-                        <option value="3">Circular Motion/Gravitation</option>
+                        <option selected value="3">Circular Motion/Gravitation</option>
                         <option value="4">Energy</option>
                         <option value="5">Momentum</option>
                         <option value="6">Simple Harmonic Motion</option>
@@ -51,13 +51,13 @@
 
                     <!-- Inputs -->
                         <div id="coefficient-div">
-                            <p class="coefficient">x(t) = <sup>1</sup>&frasl;<sub>2</sub>at<sup>2</sup> + v<sub>0</sub>t + x<sub>0</sub></p>
-                            <label class="form-label coefficient">Acceleration (a):</label>
-                            <input id="a" name="acceleration" value="{{ a }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
-                            <label class="form-label coefficient">Initial Velocity (v<sub>0</sub>):</label>
+                            <p class="coefficient">F<sub>c</sub> = (mv<sup>2</sup>)/r</p>
+                            <label class="form-label coefficient">Mass (m):</label>
+                            <input id="m" name="mass" value="{{ m }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
+                            <label class="form-label coefficient">Velocity (v):</label>
                             <input id="v" name="velocity" value="{{ v }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
-                            <label class="form-label coefficient">Initial Position (x<sub>0</sub>):</label>
-                            <input id="x" name="position" value="{{ x }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
+                            <label class="form-label coefficient">Radius (r):</label>
+                            <input id="r" name="radius" value="{{ r }}" type="text" class="form-control coefficient" aria-describedby="basic-addon1">
                             <button class="btn btn-success">Create Visualization</button>
                         </div>
                     </form>
@@ -88,9 +88,8 @@
         let selectedTopic = [];
         $("#topic").ready(function() {
             kinematicsEqns.forEach(function (eqn) {
-                if (eqn == "1D Motion") {
+                if (eqn == "Centripetal Force") {
                     $("#equation-form").append("<option selected class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
-
                 }
                 else {
                     $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
@@ -130,9 +129,8 @@
             }
 
             selectedTopic.forEach(function (eqn) {
-                if (eqn == "1D Motion") {
+                if (eqn == "Centripetal Force") {
                     $("#equation-form").append("<option selected class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
-
                 }
                 else {
                     $("#equation-form").append("<option class='equation' value= \'" + eqn + "\''>" + eqn + "</option>");
@@ -153,70 +151,64 @@
     Array.prototype.toString = function() { return __parsearray(this) };
     var scene = canvas();
 
-
     scene.width = 600
-    scene.height = 200
+    scene.height = 400
     scene.autoscale=true
     scene.center = vec(300,100, 10)
     var running = true;
-        
-    //button({text:"Pause", pos:scene.title_anchor, bind:Run});
 
-    //user defined variables 
-    var acc = vec(parseInt($("#a").val()), 0, 0);
-    var t_tot = 20;
-    var v0 = vec(parseInt($("#v").val()), 0, 0);
-    var xval = vec(parseInt($("#x").val()), 50, 10);
+    //create the floor
+    let floor = box({color:color.white});
+    floor.size = vec(600, 10, 50);
+    floor.pos = vec(300, 0, 0)
 
+    //set the variables and create cylinder object
+    var mass = parseInt($("#m").val());
+    var v = parseInt($("#v").val());
+    var rad = parseInt($("#r").val());
+    var acc = v["**"](2)["/"](rad);
 
-    // other variables
+    //the angular velocity used for the rotatio
+    var av = acc["/"](rad)["**"](0.5)
 
-    async function plot(obj) {
-        
-    }
+    var spinner = cylinder({color:color.purple, pos:vec(300, 200, 0), axis:vec(0, 0, 1), radius:rad});
+    spinner.radius = rad["*"](10);
+    spinner.length = 5;
+
+    var arrowlen = 2["*"](mass["*"](acc))["/"](rad);
+    var forcearrow = arrow({color:color.white, pos:vec(300, 200["-"](arrowlen), 5), shaftwidth:3, headwitdth:5, axis:vec(0,1, 0)});
+    forcearrow.length = arrowlen;
 
     //caption creation
-    scene.append_to_caption('time:  ')
+    scene.append_to_caption('time:  ');
     var timetext = wtext({text:'{:1.2f}'.format(0)})
-    scene.append_to_caption('\n x value:  ')
-    var xloc = wtext({text:'{:1.2f}'.format(xval.x)})
 
-    function setlabels(t, obj) {
+    //function to set the labels
+    function setlabels(t) {
     timetext.text = '{:1.2f}'.format(t)
-    xloc.text = '{:1.2f}'.format(obj.pos.x)
     }
-    let object = box({color:color.cyan});
-    var dt = 0.05;
-    async function f(obj) {
-        //define the object that will be moving
 
-        object.size = vec(10,10,10);
-        object.pos = xval;
-
+    //create the function to move the object
+    var dt = 0.01
+    async function f(obj, arrowval) {
         let t = clock();
         var tinitial = clock();
-        //todo: make this update
-        
-        while (true) {
+        while(true) {
             await rate(100);
-            
             if (running){
-                //set time
                 t = clock()["-"](tinitial);
-                if(t[">"](t_tot)) break;
-                if ((570["<="](object.pos.x)) && (object.pos.x["<="](600))) {
-                    tinitial = clock();
+                obj.rotate({angle:av["*"](dt), axis:vec(0,0,1)});
+                forcearrow.rotate({angle:av["*"](dt), axis:vec(0,0,1), origin:vec(300 ,200, 5)})
+                setlabels(t)
                 }
-                obj.pos = acc["*"](t["**"](2))["+"](v0["*"](t))["+"](xval);
-                setlabels(t, obj)
-                
-            
             }
         }
-    }
-    let t2 = await f(object);}
-    ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
+    let t2 = await f(spinner, forcearrow);
 
+
+    }
+    ;$(function(){ window.__context = { glowscript_container: $("#glowscript").removeAttr("id") }; __main__() })})()
+    // END JAVASCRIPT
     </script>
     {% endblock %}
 </body>
