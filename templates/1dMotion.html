@@ -419,13 +419,11 @@
                 //set time
                 t = clock()["-"](tinitial);
                 if(t[">"](t_tot)) break;
-                if ((570["<="](object.pos.x)) && (object.pos.x["<="](600))) {
+                if ((600) ["<="] (obj.pos.x)) {
                     tinitial = clock();
                 }
                 obj.pos = acc["*"](t["**"](2))["+"](v0["*"](t))["+"](xval);
-                setlabels(t, obj)
-                
-            
+                setlabels(t, obj);
             }
         }
     }
